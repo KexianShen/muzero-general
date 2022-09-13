@@ -135,8 +135,6 @@ class Game(AbstractGame):
 
     def __init__(self, seed=None):
         self.env = gym.make("CartPole-v1")
-        if seed is not None:
-            self.env.seed(seed)
 
     def step(self, action):
         """
@@ -148,8 +146,8 @@ class Game(AbstractGame):
         Returns:
             The new observation, the reward and a boolean if the game has ended.
         """
-        observation, reward, done, _ = self.env.step(action)
-        return numpy.array([[observation]]), reward, done
+        observation, reward, terminated, truncated, _ = self.env.step(action)
+        return numpy.array([[observation]]), reward, terminated or truncated
 
     def legal_actions(self):
         """
@@ -171,7 +169,7 @@ class Game(AbstractGame):
         Returns:
             Initial observation of the game.
         """
-        return numpy.array([[self.env.reset()]])
+        return numpy.array([[self.env.reset()[0]]])
 
     def close(self):
         """
